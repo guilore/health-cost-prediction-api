@@ -1,26 +1,6 @@
 import pandas as pd
 from numpy.random import PCG64, Generator
 
-# NOTE: This is a legacy method and should be avoided
-# np.random.seed(42)
-
-# number of rows
-
-# n = 10_000
-
-# random data frame creation for age, number of emergency rooms visits, consultations, hospitalizations and exams
-
-# df = pd.DataFrame(
-#     {
-#         "age": np.random.randint(18, 85, n),
-#         "er_visits_12m": np.random.poisson(1.5, n),
-#         "consultations_12m": np.random.poisson(5, n),
-#         "hospitalizations_12m": np.random.poisson(0.3, n),
-#         "exams_12m": np.random.poisson(8, n),
-#     }
-# )
-
-# A more modern approach to create the data above is the following:
 
 
 def create_beneficiary_data(n: int, high_quantile: float = 0.9) -> pd.DataFrame:
