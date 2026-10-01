@@ -1,20 +1,13 @@
 from fastapi import FastAPI
-import joblib
 import pandas as pd
-from pydantic import BaseModel
+
+from src.data import BeneficiaryData
+from src.model import load_or_train_model
 
 app = FastAPI(title="Health Cost Prediction API")
 
-model = joblib.load("models/health_cost_model.joblib")
+model = load_or_train_model()
 
-
-class BeneficiaryData(BaseModel):
-    age: float
-    er_visits_12m: float
-    consultations_12m: float
-    hospitalizations_12m: float
-    exams_12m: float
-    historical_cost: float
 
 
 @app.get("/")

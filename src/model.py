@@ -1,10 +1,14 @@
 # Here we add the ML model
 
 from collections.abc import Sequence
+from pathlib import Path
 
+import joblib
 import pandas as pd
 from lightgbm import LGBMClassifier
 from sklearn.model_selection import train_test_split
+
+from src.data import create_beneficiary_data
 
 FEATURES = [
     "age",
@@ -55,6 +59,7 @@ def split_data(data: pd.DataFrame, test_size: float) -> Sequence[pd.DataFrame]:
         # random_state=42,
         stratify=y,  # stratify because the target is unbalanced
     )
+
     return X_train, X_test, y_train, y_test
 
 
@@ -74,3 +79,32 @@ def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> LGBMClassifier:
 
 def predict(model: LGBMClassifier, X_test: pd.DataFrame):
     return model.predict_proba(X_test)[:, 1]
+
+
+MODEL_PATH = Path("models/health_cost_model.joblib")
+
+
+def save_model(model: LGBMClassifier) -> None:
+    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, MODEL_PATH)
+
+
+def load_or_train_model() -> LGBMClassifier:
+    if MODEL_PATH.exists():
+        return joblib.load(MODEL_PATH)
+
+    data = create_beneficiary_data(
+        n=1000,
+        high_quantile=0.95,
+    )
+
+    X_train, X_test, y_train, y_test = split_data(
+        data,
+        test_size=0.2,
+    )
+
+    model = train_model(X_train, y_train)
+
+    save_model(model)
+
+    return model

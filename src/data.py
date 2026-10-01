@@ -1,7 +1,19 @@
 import pandas as pd
 from numpy.random import PCG64, Generator
+from pydantic import BaseModel
+
+# Data used inside the API
+
+class BeneficiaryData(BaseModel):
+    age: int
+    er_visits_12m: int
+    consultations_12m: int
+    hospitalizations_12m: int
+    exams_12m: int
+    historical_cost: float
 
 
+# Simulated data for the dataset 
 
 def create_beneficiary_data(n: int, high_quantile: float = 0.9) -> pd.DataFrame:
     """
@@ -58,3 +70,6 @@ def create_beneficiary_data(n: int, high_quantile: float = 0.9) -> pd.DataFrame:
     df["high_cost"] = (df["future_cost"] > p90).astype(int)
 
     return df
+
+
+
