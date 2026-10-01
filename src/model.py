@@ -98,7 +98,7 @@ def load_or_train_model() -> LGBMClassifier:
         high_quantile=0.95,
     )
 
-    X_train, X_test, y_train, y_test = split_data(
+    X_train, _, y_train, _ = split_data(
         data,
         test_size=0.2,
     )
